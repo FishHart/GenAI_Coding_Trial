@@ -1,90 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Progate</title>
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>謎解きグルメキッチン Ver.2</title>
+    <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
-  <header>
-    <div class="container">
-      <div class="header-left">
-        <img class="logo" src="https://prog-8.com/images/html/advanced/main_logo.png">
-      </div>
-      <span class="fa fa-bars menu-icon"></span>
-      <div class="header-right">
-        <a href="#">レッスン</a>
-        <a href="#">新規登録</a>
-        <a href="#" class="login">ログイン</a>
-      </div>
-    </div>
-  </header>
-  <div class="top-wrapper">
-    <div class="container">
-      <h1>LEARN TO CODE.<br>LEARN TO BE CREATIVE.</h1>
-      <p>Progateはオンラインプログラミング学習サービスです。<br>初心者にもやさしいスライドとレッスンで、ウェブサービスを作りながらプログラミングを学んでいきましょう。</p>
-      <div class="btn-wrapper">
-        <a href="#" class="btn signup">新規登録はこちら</a>
-        <p>or</p>
-        <a href="#" class="btn facebook"><span class="fa fa-facebook"></span>Facebookで登録</a>
-        <a href="#" class="btn twitter"><span class="fa fa-twitter"></span>Twitterで登録</a>
-      </div>
-    </div>
-  </div>
-  <div class="lesson-wrapper">
-    <div class="container">
-      <div class="heading">
-        <h2>Learn Where to Get Started!</h2>
-      </div>
-      <div class="lessons">
-        <div class="lesson">
-          <div class="lesson-icon">
-            <img src="https://prog-8.com/images/html/advanced/html.png">
-            <p>HTML & CSS</p>
-          </div>
-          <p class="text-contents">ウェブページの作成に使用される言語です。HTMLとCSSを組み合わせることで、静的なページを作り上げることができます。</p>
+
+    <header>
+        <h1>Gourmet Mystery</h1>
+        <div class="score-board">豪華さ: <span id="total-stars">0</span> ★</div>
+    </header>
+
+    <div id="kitchen-container">
+        <div class="kitchen-counter">
+            <div class="sink-area"><div class="sink">💧</div></div>
+            <div class="cutting-area">
+                <div class="board"></div>
+                <div class="knife">🔪</div>
+            </div>
+            <div class="stove-area">
+                <div class="stove-burner"><div class="pan">🍳</div></div>
+            </div>
         </div>
-        <div class="lesson">
-          <div class="lesson-icon">
-            <img src="https://prog-8.com/images/html/advanced/jQuery.png">
-            <p>jQuery</p>
-          </div>
-          <p class="text-contents">素敵な動きを手軽に実装できるJavaScriptライブラリです。 アニメーション効果をつけたり、Ajax（エイジャックス）を使って外部ファイルを読み込んだりと色々なことができます。</p>
         </div>
-        <div class="lesson">
-          <div class="lesson-icon">
-            <img src="https://prog-8.com/images/html/advanced/ruby.png">
-            <p>Ruby</p>
-          </div>
-          <p class="text-contents">オープンソースの動的なプログラミング言語で、 シンプルさと高い生産性を備えています。大きなWebアプリケーションから小さな日用ツールまで、さまざまなソフトウェアを作ることができます。</p>
+
+    <div id="puzzle-modal" class="modal-overlay">
+        <div class="modal-content puzzle-content">
+            <span class="close-btn" onclick="closeModal('puzzle-modal')">&times;</span>
+            <h2 id="puzzle-title">謎のタイトル</h2>
+            <p class="puzzle-desc" id="puzzle-desc">説明文</p>
+            
+            <div id="puzzle-text" class="riddle-box"></div>
+            <div id="feedback-msg"></div>
+            
+            <div class="answer-area">
+                <input type="text" id="answer-input" placeholder="回答を入力...">
+                <button class="primary-btn" onclick="submitAnswer()">送信</button>
+            </div>
         </div>
-        <div class="lesson">
-          <div class="lesson-icon">
-            <img src="https://prog-8.com/images/html/advanced/php.png">
-            <p>PHP</p>
-          </div>
-          <p class="text-contents">HTMLだけではページの内容を変えることはできません。PHPはHTMLにプログラムを埋め込み、それを可能にします。</p>
+    </div>
+
+    <div id="smartphone-modal" class="modal-overlay">
+        <div class="smartphone-frame">
+            <div class="phone-header">
+                <span class="close-phone" onclick="closeModal('smartphone-modal')">✕</span>
+                <span>Mystic OS</span>
+                <span>📶 100%</span>
+            </div>
+            
+            <div class="phone-nav">
+                <button class="nav-btn active" onclick="switchTab('shop')">🛒<br>Shop</button>
+                <button class="nav-btn" onclick="switchTab('recipe')">📖<br>Recipe</button>
+                <button class="nav-btn" onclick="switchTab('cooker')">🥘<br>Cooker</button>
+            </div>
+
+            <div class="phone-screen">
+                
+                <div id="tab-shop" class="tab-content active">
+                    <div class="app-banner shop-bg">
+                        <h3>食材マーケット</h3>
+                        <p>謎を解いて食材を入荷せよ</p>
+                    </div>
+                    <div id="shop-list" class="scroll-list">
+                        </div>
+                </div>
+
+                <div id="tab-recipe" class="tab-content">
+                    <div class="app-banner recipe-bg">
+                        <h3>極秘レシピ帳</h3>
+                        <p>黒塗りの謎を解明せよ</p>
+                    </div>
+                    <div id="recipe-list" class="scroll-list">
+                        </div>
+                </div>
+
+                <div id="tab-cooker" class="tab-content">
+                    <div class="app-banner cooker-bg">
+                        <h3>Omni-Cooker</h3>
+                        <p>食材を転送して一瞬で調理</p>
+                    </div>
+                    <div class="cooker-interface">
+                        <div class="cooker-step">
+                            <label>① 作る料理（レシピ）を選択</label>
+                            <select id="cooker-recipe-select" onchange="updateCookerRequirements()">
+                                <option value="">-- 選択してください --</option>
+                            </select>
+                        </div>
+                        <div class="cooker-step">
+                            <label>② 食材をセット（複数選択可）</label>
+                            <div id="cooker-inventory-list" class="checkbox-list">
+                                <div class="empty-msg">食材を持っていません</div>
+                            </div>
+                        </div>
+                        <button class="cook-btn" onclick="executeCooking()">⚡ 調理開始 ⚡</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="phone-home-btn" onclick="closeModal('smartphone-modal')"></div>
         </div>
-      </div>
-      <div class="clear"></div>
     </div>
-  </div>
-  <div class="message-wrapper">
-    <div class="container">
-      <div class="heading">
-        <h2>さぁ、あなたもProgateでプログラミングを学んでみませんか?</h2>
-        <h3>Let's learn to code, learn to be creative!</h3>
-      </div>
-      <span class="btn message">さっそく開発する</span>
+
+    <div id="ui-controls">
+        <button class="app-icon" onclick="openModal('smartphone-modal')">
+            <div class="icon-grid">
+                <span></span><span></span>
+                <span></span><span></span>
+            </div>
+            <div class="icon-label">My Kitchen</div>
+        </button>
     </div>
-  </div>
-  <footer>
-    <div class="container">
-      <img src="https://prog-8.com/images/html/advanced/footer_logo.png">
-      <p>Learn to Code, Learn to be Creative.</p>
-    </div>
-  </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
